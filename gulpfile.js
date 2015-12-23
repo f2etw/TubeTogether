@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
+var ghPages = require('gulp-gh-pages');
 
 gulp.task('serve', function () {
   browserSync({
@@ -22,4 +23,9 @@ gulp.task('serve', function () {
 // Watch Files For Changes & Reload
 gulp.task('dev', ['serve'], function () {
   gulp.watch(['app/*.*'], browserSync.reload);
+});
+
+gulp.task('deploy', function () {
+  return gulp.src('app/*/')
+    .pipe(ghPages());
 });
