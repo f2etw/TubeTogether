@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TubeTogether</title>
+  <style>
+  body {
+    margin: 0;
+    display: flex;
+    overflow: hidden;
+  }
+  iframe {
+    width: 70vw;
+    height: 42vw;
+    max-height: 80vh;
+  }
+  iframe:nth-of-type(2) {
+    width: 30vw;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  @media (orientation: portrait) {
+    body {
+      flex-direction: column;
+    }
+    iframe {
+      width: 100vw;
+      height: 60vh;
+      flex-grow: 6;
+    }
+    iframe:nth-of-type(2) {
+      width: 100vw;
+      height: 40vh;
+      flex-grow: 4;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <script defer src="./app.js"></script>
+</body>
+</html>
