@@ -15,8 +15,6 @@ if (location.search.length) {
 
   YT2gether.event = _uq.event;
   YT2gether.startAt = _uq.startAt;
-
-  console.log(new Date(YT2gether.startAt));
 }
 
 var updateState = function () {
@@ -78,17 +76,16 @@ fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playli
         var totalDuration = durationsStack.slice(-1)[0];
 
         var timer = {};
-        timer.now = 1000;
+        timer.now = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
         // if section was end
-        if (totalDuration < timer.now) {
+        if (timer.now < 0 || totalDuration < timer.now) {
           return;
         }
 
         for (var i = durationsStack.length - 1; i >= 0; i--) {
           if (timer.now > durationsStack[i]) {
             timer.startTime = timer.now - durationsStack[i];
-            console.log(i, timer.startTime);
             break;
           }
         }
@@ -106,7 +103,7 @@ var initPlayer = function (obj) {
     playerVars: {
       listType: 'playlist',
       list: obj.list,
-      // autoplay: 1,
+      autoplay: 1,
       start: obj.startTime,
       state: 1,
       index: obj.index
