@@ -17,6 +17,7 @@ if (location.search.length) {
   YT2gether.event = _uq.event;
   YT2gether.startAt = _uq.startAt;
   YT2gether.listId = _uq.list;
+  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 } else {
   // update info from github issue
   fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then(function (response) {
@@ -117,7 +118,7 @@ var initPlayer = function (obj) {
 (function () {
   var chatIframe = document.createElement('iframe');
   document.body.appendChild(chatIframe);
-  chatIframe.src = 'https://gitter.im/f2etw/TubeTogether/~chat';
+  chatIframe.src = YT2gether.chatroom;
 })();
 
 // init youtube iframe
