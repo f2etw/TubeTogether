@@ -16,6 +16,8 @@ if (location.search.length) {
 
   YT2gether.event = _uq.event;
   YT2gether.startAt = _uq.startAt;
+  YT2gether.listId = _uq.list;
+  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 } else {
   // update info from github issue
   fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then(function (response) {
@@ -38,18 +40,13 @@ if (location.search.length) {
 var API_KEY = 'AIzaSyDyZ231vqsztOc_f2rKwyedUOY9eEnq2lU';
 var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
-var playlistId = {
-  '911': 'PLOSNzbDNEDer0LgODrJzpBgKS90RpVjwb',
-  'postCSS': 'PLLnpHn493BHFvjZzyYrQP0RTsG-Al7j9m'
-};
-
 var DURATION_UNIT = {
   'H': 60 * 60,
   'M': 60,
   'S': 1
 };
 
-fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${playlistId[YT2gether.event]}&key=${API_KEY}`)
+fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
   .then(function (res) {
     return res.json();
   })
@@ -97,7 +94,7 @@ fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playli
         }
 
         initPlayer({
-          list: playlistId[YT2gether.event],
+          list: YT2gether.listId,
           startTime: timer.startTime,
           index: i
         });
@@ -121,7 +118,7 @@ var initPlayer = function (obj) {
 (function () {
   var chatIframe = document.createElement('iframe');
   document.body.appendChild(chatIframe);
-  chatIframe.src = 'https://gitter.im/f2etw/TubeTogether/~chat';
+  chatIframe.src = YT2gether.chatroom;
 })();
 
 // init youtube iframe
