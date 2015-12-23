@@ -4,6 +4,20 @@
   <meta charset="utf-8">
   <title>TubeTogether</title>
   <style>
+  :root::after {
+    content: 'OFF AIR';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    width: 30vw;
+    height: 20vh;
+    text-align: center;
+    font: 900 4vw / 20vh monospace;
+    color: #fff;
+    text-shadow: 0 0 5px #000;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/6/66/SMPTE_Color_Bars.svg') no-repeat 50% 50% / 100%;
+  }
   body {
     margin: 0;
     display: flex;
@@ -19,8 +33,16 @@
     height: 100vh;
     max-height: 100vh;
   }
-
+  iframe:nth-of-type(1):nth-last-of-type(1) {
+    flex: 1;
+    height: 100vh;
+  }
   @media (orientation: portrait) {
+    :root::after {
+      width: 100vw;
+      font-size: 13vw;
+      background-size: 100vw ;
+    }
     body {
       flex-direction: column;
     }
