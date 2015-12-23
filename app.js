@@ -14,7 +14,6 @@ if (location.search.length) {
     _uq[i.split(/=/)[0]] = i.split(/=/)[1] || '';
   });
 
-  YT2gether.event = _uq.event;
   YT2gether.startAt = _uq.startAt;
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
