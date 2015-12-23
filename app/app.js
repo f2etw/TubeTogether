@@ -5,6 +5,7 @@ window.YT2gether = {
   startAt: null
 };
 
+// get event info
 if (location.search.length) {
   var _search = location.search.substr(1);
 
@@ -15,19 +16,24 @@ if (location.search.length) {
 
   YT2gether.event = _uq.event;
   YT2gether.startAt = _uq.startAt;
-}
-
-var updateState = function () {
-  fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living').then(function (response) {
+} else {
+  // update info from github issue
+  fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then(function (response) {
     return response.json();
   })
   .then(function (posts) {
-    console.log(posts);
+    if (/^\?/.test(posts[0].body)) {
+      location.search = posts[0].body.match(/^\?.+/)[0];
+    }
   })
   .catch(function (content) {
+    console.log(123);
+    if (window.confirm('GG 惹，請問要去 GitHub issue 確認一下有沒有新活動嗎？')) {
+      location.href = 'https://github.com/f2etw/TubeTogether/labels/living';
+    }
     return 'GG';
   });
-};
+}
 
 var API_KEY = 'AIzaSyDyZ231vqsztOc_f2rKwyedUOY9eEnq2lU';
 var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
