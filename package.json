@@ -1,0 +1,26 @@
+{
+  "name": "tube-together",
+  "version": "1.0.0",
+  "description": "一起看 YouTube~",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.10.1",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-gh-pages": "^0.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rplus/TubeTogether.git"
+  },
+  "author": "Rplus <Rplus.tw@gmail.com> (https://github.com/Rplus)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rplus/TubeTogether/issues"
+  },
+  "homepage": "https://github.com/Rplus/TubeTogether#readme"
+}
