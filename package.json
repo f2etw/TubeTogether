@@ -4,6 +4,7 @@
   "description": "一起看 YouTube~",
   "main": "index.js",
   "devDependencies": {
+    "autoprefixer": "^6.2.1",
     "browser-sync": "^2.10.1",
     "csswring": "^4.1.1",
     "gulp": "^3.9.0",

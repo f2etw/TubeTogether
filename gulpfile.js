@@ -6,11 +6,13 @@ var ghPages = require('gulp-gh-pages');
 var postcss = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 var csswring = require('csswring');
+var autoprefixer = require('autoprefixer');
 
 var BUILD_PATH = '_public/';
 
 gulp.task('css', function () {
   var processors = [
+    autoprefixer,
     csswring
   ];
   return gulp.src('app/app.css')
@@ -54,6 +56,6 @@ gulp.task('dev', ['serve'], function () {
 gulp.task('build', ['js', 'index', 'css']);
 
 gulp.task('deploy', ['build'], function () {
-  return gulp.src(BUILD_PATH + '/*/')
+  return gulp.src(BUILD_PATH + '*/')
     .pipe(ghPages());
 });
