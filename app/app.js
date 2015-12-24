@@ -8,9 +8,9 @@ window.YT2gether = {
 
 // get event info
 if (location.search.length) {
-  var _search = location.search.substr(1);
+  let _search = location.search.substr(1);
 
-  var _uq = {};
+  let _uq = {};
   _search.split(/&/).forEach((i) => {
     _uq[i.split(/=/)[0]] = i.split(/=/)[1] || '';
   });
@@ -19,10 +19,10 @@ if (location.search.length) {
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 
-  var _deltaTime = new Date(YT2gether.startAt) - new Date();
+  let _deltaTime = new Date(YT2gether.startAt) - new Date();
 
-  var calcRemainingTime = () => {
-    var _timeBase;
+  let calcRemainingTime = () => {
+    let _timeBase;
 
     _deltaTime = (new Date(YT2gether.startAt) - new Date()) / 1e3;
 
@@ -55,7 +55,7 @@ if (location.search.length) {
 
   // not begun yet
   if (_deltaTime > 0) {
-    var countdownTimer = {
+    let countdownTimer = {
       timeUnit: 'dhms',
       timeBase: [60 * 60 * 24, 60 * 60, 60, 1],
       timeLimitation: [3650, 24, 60, 60]
@@ -83,10 +83,10 @@ if (location.search.length) {
   });
 }
 
-var API_KEY = 'AIzaSyDyZ231vqsztOc_f2rKwyedUOY9eEnq2lU';
-var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
+const API_KEY = 'AIzaSyDyZ231vqsztOc_f2rKwyedUOY9eEnq2lU';
+const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
-var DURATION_UNIT = {
+const DURATION_UNIT = {
   'H': 60 * 60,
   'M': 60,
   'S': 1
@@ -94,7 +94,7 @@ var DURATION_UNIT = {
 
 YT2gether.initChatroom = () => {
   if (YT2gether.chatroom === 'none') { return; }
-  var chatIframe = document.createElement('iframe');
+  let chatIframe = document.createElement('iframe');
   chatIframe.src = YT2gether.chatroom;
   document.body.appendChild(chatIframe);
 };
@@ -118,25 +118,25 @@ YT2gether.initYoutube = () => {
         });
     })
     .then((data) => {
-      var durations = data.items.map((item) => {
+      let durations = data.items.map((item) => {
         return item.contentDetails.duration.match(/\d+\w/gi).reduce((a, b, c) => {
-          var xx = [a, b].map((i) => {
-            var _i = i.match(/(\d+)(\w)/);
+          let xx = [a, b].map((i) => {
+            let _i = i.match(/(\d+)(\w)/);
             return _i[1] * DURATION_UNIT[_i[2]];
           });
           return xx[0] + xx[1];
         });
       });
 
-      var _durationsTempSum = 0;
-      var durationsStack = durations.map((time) => {
+      let _durationsTempSum = 0;
+      let durationsStack = durations.map((time) => {
         _durationsTempSum += time;
         return _durationsTempSum;
       });
 
-      var totalDuration = durationsStack.slice(-1)[0];
+      let totalDuration = durationsStack.slice(-1)[0];
 
-      var timer = {};
+      let timer = {};
       timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
       // if event was over or not yet begun
@@ -144,7 +144,7 @@ YT2gether.initYoutube = () => {
         return;
       }
 
-      for (var i = durationsStack.length - 1; i >= 0; i--) {
+      for (let i = durationsStack.length - 1; i >= 0; i--) {
         if (timer.deltaTime > durationsStack[i]) {
           timer.startTime = timer.deltaTime - durationsStack[i];
           break;
