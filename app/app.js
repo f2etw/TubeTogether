@@ -19,13 +19,49 @@ if (location.search.length) {
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 
-  var deltaTime = new Date(YT2gether.startAt) - new Date();
+  var _deltaTime = new Date(YT2gether.startAt) - new Date();
+
+  var calcRemainingTime = function () {
+    var _timeBase;
+
+    _deltaTime = (new Date(YT2gether.startAt) - new Date()) / 1e3;
+
+    clearTimeout(YT2gether.refeshTimer);
+    countdownTimer.roughTime = null;
+
+    countdownTimer.time = countdownTimer.timeBase.map(function (base, idx) {
+      return _deltaTime / base % countdownTimer.timeLimitation[idx] | 0;
+    });
+
+    countdownTimer.time.forEach(function (t, i) {
+      if (!countdownTimer.roughTime && t) {
+        _timeBase = countdownTimer.timeBase[i];
+        countdownTimer.roughTime = t + countdownTimer.timeUnit[i];
+      }
+    });
+
+    document.documentElement.setAttribute('data-countdown', 'Start after ~' + countdownTimer.roughTime);
+
+    if (_deltaTime < 60 * 1) {
+      YT2gether.refeshTimer = setTimeout(function () {
+        location.reload();
+      }, _deltaTime * 1e3);
+    } else {
+      YT2gether.refeshTimer = setTimeout(function () {
+        calcRemainingTime();
+      }, _timeBase * 200);
+    }
+  };
 
   // not begun yet
-  if (deltaTime > 0) {
-    setTimeout(function () {
-      location.reload();
-    }, deltaTime);
+  if (_deltaTime > 0) {
+    var countdownTimer = {
+      timeUnit: 'dhms',
+      timeBase: [60 * 60 * 24, 60 * 60, 60, 1],
+      timeLimitation: [3650, 24, 60, 60]
+    };
+
+    calcRemainingTime();
   }
 } else {
   YT2gether.stopInit = true;
