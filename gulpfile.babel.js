@@ -1,14 +1,15 @@
 'use strict';
 
-var gulp = require('gulp');
-var babel = require('gulp-babel');
-var browserSync = require('browser-sync');
-var ghPages = require('gulp-gh-pages');
-var postcss = require('gulp-postcss');
-var sourcemaps = require('gulp-sourcemaps');
-var csswring = require('csswring');
-var autoprefixer = require('autoprefixer');
-var plumber = require('gulp-plumber');
+import gulp from 'gulp';
+import babel from 'gulp-babel';
+import browserSync from 'browser-sync';
+import ghPages from 'gulp-gh-pages';
+import postcss from 'gulp-postcss';
+import sourcemaps from 'gulp-sourcemaps';
+import csswring from 'csswring';
+import autoprefixer from 'autoprefixer';
+import plumber from 'gulp-plumber';
+
 var reload = browserSync.reload;
 
 var BUILD_PATH = '_public/';
