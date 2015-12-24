@@ -48,9 +48,10 @@ var DURATION_UNIT = {
 };
 
 YT2gether.initChatroom = function () {
+  if (YT2gether.chatroom === 'none') { return; }
   var chatIframe = document.createElement('iframe');
-  document.body.appendChild(chatIframe);
   chatIframe.src = YT2gether.chatroom;
+  document.body.appendChild(chatIframe);
 };
 
 YT2gether.initYoutube = function () {
@@ -93,7 +94,7 @@ YT2gether.initYoutube = function () {
       var timer = {};
       timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
-      // if section was end
+      // if event was over or not yet begun
       if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
         return;
       }
