@@ -12,6 +12,7 @@ import plumber from 'gulp-plumber';
 
 let reload = browserSync.reload;
 
+let APP_PATH = 'app/';
 let BUILD_PATH = '_public/';
 
 gulp.task('css', () => {
@@ -19,7 +20,7 @@ gulp.task('css', () => {
     autoprefixer,
     csswring
   ];
-  return gulp.src('app/app.css')
+  return gulp.src(`${APP_PATH}*.css`)
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
@@ -28,12 +29,12 @@ gulp.task('css', () => {
 });
 
 gulp.task('index', () => {
-  return gulp.src('app/index.html')
+  return gulp.src(`${APP_PATH}index.html`)
     .pipe(gulp.dest(BUILD_PATH));
 });
 
 gulp.task('js', () => {
-  return gulp.src('app/app.js')
+  return gulp.src(`${APP_PATH}*.js`)
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(babel())
@@ -59,9 +60,9 @@ gulp.task('serve', ['build'], () => {
 
 // Watch Files For Changes & Reload
 gulp.task('dev', ['serve'], () => {
-  gulp.watch(['app/*.js'], ['js', reload]);
-  gulp.watch(['app/*.css'], ['css', reload]);
-  gulp.watch(['app/index.html'], ['index', reload]);
+  gulp.watch([`${APP_PATH}*.js`], ['js', reload]);
+  gulp.watch([`${APP_PATH}*.css`], ['css', reload]);
+  gulp.watch([`${APP_PATH}index.html`], ['index', reload]);
 });
 
 gulp.task('build', ['js', 'index', 'css']);
