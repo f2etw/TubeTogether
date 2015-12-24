@@ -5,6 +5,8 @@
   "main": "index.js",
   "devDependencies": {
     "autoprefixer": "^6.2.1",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-preset-es2015": "^6.3.13",
     "browser-sync": "^2.10.1",
     "csswring": "^4.1.1",
     "gulp": "^3.9.0",
