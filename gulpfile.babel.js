@@ -7,6 +7,7 @@ var postcss = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 var csswring = require('csswring');
 var autoprefixer = require('autoprefixer');
+var reload = browserSync.reload;
 
 var BUILD_PATH = '_public/';
 
@@ -50,7 +51,9 @@ gulp.task('serve', ['build'], function () {
 
 // Watch Files For Changes & Reload
 gulp.task('dev', ['serve'], function () {
-  gulp.watch(['app/*.*'], browserSync.reload);
+  gulp.watch(['app/*.js'], ['js', reload]);
+  gulp.watch(['app/*.css'], ['css', reload]);
+  gulp.watch(['app/index.html'], ['index', reload]);
 });
 
 gulp.task('build', ['js', 'index', 'css']);
