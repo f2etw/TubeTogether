@@ -91,16 +91,16 @@ YT2gether.initYoutube = function () {
       var totalDuration = durationsStack.slice(-1)[0];
 
       var timer = {};
-      timer.now = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
+      timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
       // if section was end
-      if (timer.now < 0 || totalDuration < timer.now) {
+      if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
         return;
       }
 
       for (var i = durationsStack.length - 1; i >= 0; i--) {
-        if (timer.now > durationsStack[i]) {
-          timer.startTime = timer.now - durationsStack[i];
+        if (timer.deltaTime > durationsStack[i]) {
+          timer.startTime = timer.deltaTime - durationsStack[i];
           break;
         }
       }
