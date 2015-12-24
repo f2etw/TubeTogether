@@ -92,26 +92,18 @@ fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playli
           }
         }
 
-        initPlayer({
-          list: YT2gether.listId,
-          startTime: timer.startTime,
-          index: i
+        YT2gether.player = new YT.Player('player', {
+          playerVars: {
+            listType: 'playlist',
+            list: YT2gether.listId,
+            autoplay: 1,
+            start: timer.startTime,
+            state: 1,
+            index: i
+          }
         });
       });
   });
-
-var initPlayer = function (obj) {
-  YT2gether.player = new YT.Player('player', {
-    playerVars: {
-      listType: 'playlist',
-      list: obj.list,
-      autoplay: 1,
-      start: obj.startTime,
-      state: 1,
-      index: obj.index
-    }
-  });
-};
 
 // init chatroom iframe
 (function () {
