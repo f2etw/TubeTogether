@@ -9,6 +9,7 @@ import sourcemaps from 'gulp-sourcemaps';
 import csswring from 'csswring';
 import autoprefixer from 'autoprefixer';
 import plumber from 'gulp-plumber';
+import uglify from 'gulp-uglify';
 
 let reload = browserSync.reload;
 
@@ -38,6 +39,7 @@ gulp.task('js', () => {
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(babel())
+    .pipe(uglify())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(BUILD_PATH));
 });
