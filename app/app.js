@@ -1,6 +1,7 @@
 /* globals YT, fetch, YT2gether, location */
 
 window.YT2gether = {
+  stopInit: false,
   event: 'postCSS',
   startAt: null
 };
@@ -18,6 +19,8 @@ if (location.search.length) {
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 } else {
+  YT2gether.stopInit = true;
+
   // update info from github issue
   fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then(function (response) {
     return response.json();
@@ -52,6 +55,8 @@ YT2gether.initChatroom = function () {
 };
 
 YT2gether.initYoutube = function () {
+  if (YT2gether.stopInit) { return; }
+
   fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
     .then(function (res) {
       return res.json();
