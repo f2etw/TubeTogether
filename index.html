@@ -1,22 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant-TW">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width"/>
   <title>TubeTogether</title>
   <style>
+  :root::before,
   :root::after {
-    content: 'OFF AIR';
     position: absolute;
     bottom: 0;
-    right: 0;
     z-index: -1;
-    width: 30vw;
     height: 20vh;
     text-align: center;
     font: 900 4vw / 20vh monospace;
+  }
+  :root::after {
+    content: 'OFF AIR';
+    right: 0;
+    width: 30vw;
     color: #fff;
     text-shadow: 0 0 5px #000;
     background: url('https://upload.wikimedia.org/wikipedia/commons/6/66/SMPTE_Color_Bars.svg') no-repeat 50% 50% / 100%;
+  }
+  :root::before {
+    content: attr(data-countdown);
+    width: 50vw;
   }
   body {
     margin: 0;
@@ -39,9 +47,9 @@
   }
   @media (orientation: portrait) {
     :root::after {
-      width: 100vw;
-      font-size: 13vw;
-      background-size: 100vw ;
+      width: 50vw;
+      font-size: 8vw;
+      background-size: cover;
     }
     body {
       flex-direction: column;
@@ -61,6 +69,7 @@
 </head>
 <body>
   <div id="player"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script defer src="./app.js"></script>
 </body>
 </html>
