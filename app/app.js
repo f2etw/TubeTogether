@@ -93,7 +93,8 @@ const DURATION_UNIT = {
 };
 
 YT2gether.initChatroom = () => {
-  if (YT2gether.chatroom === 'none') { return; }
+  if (YT2gether.stopInit || YT2gether.chatroom === 'none') { return; }
+
   let chatIframe = document.createElement('iframe');
   chatIframe.src = YT2gether.chatroom;
   document.body.appendChild(chatIframe);
