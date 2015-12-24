@@ -8,6 +8,7 @@ var postcss = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 var csswring = require('csswring');
 var autoprefixer = require('autoprefixer');
+var plumber = require('gulp-plumber');
 var reload = browserSync.reload;
 
 var BUILD_PATH = '_public/';
@@ -18,6 +19,7 @@ gulp.task('css', function () {
     csswring
   ];
   return gulp.src('app/app.css')
+    .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
     .pipe(sourcemaps.write('.'))
@@ -31,6 +33,7 @@ gulp.task('index', function () {
 
 gulp.task('js', function () {
   return gulp.src('app/app.js')
+    .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write('.'))
