@@ -14,7 +14,7 @@ var reload = browserSync.reload;
 
 var BUILD_PATH = '_public/';
 
-gulp.task('css', function () {
+gulp.task('css', () => {
   var processors = [
     autoprefixer,
     csswring
@@ -27,12 +27,12 @@ gulp.task('css', function () {
     .pipe(gulp.dest(BUILD_PATH));
 });
 
-gulp.task('index', function () {
+gulp.task('index', () => {
   return gulp.src('app/index.html')
     .pipe(gulp.dest(BUILD_PATH));
 });
 
-gulp.task('js', function () {
+gulp.task('js', () => {
   return gulp.src('app/app.js')
     .pipe(plumber())
     .pipe(sourcemaps.init())
@@ -41,7 +41,7 @@ gulp.task('js', function () {
     .pipe(gulp.dest(BUILD_PATH));
 });
 
-gulp.task('serve', ['build'], function () {
+gulp.task('serve', ['build'], () => {
   browserSync({
     open: 'external',
     browser: 'google-chrome',
@@ -58,7 +58,7 @@ gulp.task('serve', ['build'], function () {
 });
 
 // Watch Files For Changes & Reload
-gulp.task('dev', ['serve'], function () {
+gulp.task('dev', ['serve'], () => {
   gulp.watch(['app/*.js'], ['js', reload]);
   gulp.watch(['app/*.css'], ['css', reload]);
   gulp.watch(['app/index.html'], ['index', reload]);
@@ -66,7 +66,7 @@ gulp.task('dev', ['serve'], function () {
 
 gulp.task('build', ['js', 'index', 'css']);
 
-gulp.task('deploy', ['build'], function () {
+gulp.task('deploy', ['build'], () => {
   return gulp.src(BUILD_PATH + '*/')
     .pipe(ghPages());
 });
