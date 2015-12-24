@@ -18,6 +18,15 @@ if (location.search.length) {
   YT2gether.startAt = _uq.startAt;
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
+
+  var deltaTime = new Date(YT2gether.startAt) - new Date();
+
+  // not begun yet
+  if (deltaTime > 0) {
+    setTimeout(function () {
+      location.reload();
+    }, deltaTime);
+  }
 } else {
   YT2gether.stopInit = true;
 
