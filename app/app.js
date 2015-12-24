@@ -20,7 +20,7 @@ if (location.search.length) {
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 
   let _deltaTime = new Date(YT2gether.startAt) - new Date();
-
+  let countdownTimer;
   let calcRemainingTime = () => {
     let _timeBase;
 
@@ -55,7 +55,7 @@ if (location.search.length) {
 
   // not begun yet
   if (_deltaTime > 0) {
-    let countdownTimer = {
+    countdownTimer = {
       timeUnit: 'dhms',
       timeBase: [60 * 60 * 24, 60 * 60, 60, 1],
       timeLimitation: [3650, 24, 60, 60]
@@ -144,7 +144,8 @@ YT2gether.initYoutube = () => {
         return;
       }
 
-      for (let i = durationsStack.length - 1; i >= 0; i--) {
+      let i = durationsStack.length - 1;
+      for (; i >= 0; i--) {
         if (timer.deltaTime > durationsStack[i]) {
           timer.startTime = timer.deltaTime - durationsStack[i];
           break;
