@@ -10,12 +10,12 @@ import csswring from 'csswring';
 import autoprefixer from 'autoprefixer';
 import plumber from 'gulp-plumber';
 
-var reload = browserSync.reload;
+let reload = browserSync.reload;
 
-var BUILD_PATH = '_public/';
+let BUILD_PATH = '_public/';
 
 gulp.task('css', () => {
-  var processors = [
+  let processors = [
     autoprefixer,
     csswring
   ];
