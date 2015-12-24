@@ -45,70 +45,73 @@ var DURATION_UNIT = {
   'S': 1
 };
 
-fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
-  .then(function (res) {
-    return res.json();
-  })
-  .then(function (data) {
-    var listString = data.items.map(function (item) {
-      return item.contentDetails.videoId;
-    }).join();
-
-    fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
-      .then(function (res) {
-        return res.json();
-      })
-      .then(function (data) {
-        var durations = data.items.map(function (item) {
-          return item.contentDetails.duration.match(/\d+\w/gi).reduce(function (a, b, c) {
-            var xx = [a, b].map(function (i) {
-              var _i = i.match(/(\d+)(\w)/);
-              return _i[1] * DURATION_UNIT[_i[2]];
-            });
-            return xx[0] + xx[1];
-          });
-        });
-
-        var _durationsTempSum = 0;
-        var durationsStack = durations.map(function (time) {
-          _durationsTempSum += time;
-          return _durationsTempSum;
-        });
-
-        var totalDuration = durationsStack.slice(-1)[0];
-
-        var timer = {};
-        timer.now = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
-
-        // if section was end
-        if (timer.now < 0 || totalDuration < timer.now) {
-          return;
-        }
-
-        for (var i = durationsStack.length - 1; i >= 0; i--) {
-          if (timer.now > durationsStack[i]) {
-            timer.startTime = timer.now - durationsStack[i];
-            break;
-          }
-        }
-
-        YT2gether.player = new YT.Player('player', {
-          playerVars: {
-            listType: 'playlist',
-            list: YT2gether.listId,
-            autoplay: 1,
-            start: timer.startTime,
-            state: 1,
-            index: i
-          }
-        });
-      });
-  });
-
-// init chatroom iframe
-(function () {
+YT2gether.initChatroom = function () {
   var chatIframe = document.createElement('iframe');
   document.body.appendChild(chatIframe);
   chatIframe.src = YT2gether.chatroom;
-})();
+};
 
+YT2gether.initYoutube = function () {
+  fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      var listString = data.items.map(function (item) {
+        return item.contentDetails.videoId;
+      }).join();
+
+      fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          var durations = data.items.map(function (item) {
+            return item.contentDetails.duration.match(/\d+\w/gi).reduce(function (a, b, c) {
+              var xx = [a, b].map(function (i) {
+                var _i = i.match(/(\d+)(\w)/);
+                return _i[1] * DURATION_UNIT[_i[2]];
+              });
+              return xx[0] + xx[1];
+            });
+          });
+
+          var _durationsTempSum = 0;
+          var durationsStack = durations.map(function (time) {
+            _durationsTempSum += time;
+            return _durationsTempSum;
+          });
+
+          var totalDuration = durationsStack.slice(-1)[0];
+
+          var timer = {};
+          timer.now = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
+
+          // if section was end
+          if (timer.now < 0 || totalDuration < timer.now) {
+            return;
+          }
+
+          for (var i = durationsStack.length - 1; i >= 0; i--) {
+            if (timer.now > durationsStack[i]) {
+              timer.startTime = timer.now - durationsStack[i];
+              break;
+            }
+          }
+
+          YT2gether.player = new YT.Player('player', {
+            playerVars: {
+              listType: 'playlist',
+              list: YT2gether.listId,
+              autoplay: 1,
+              start: timer.startTime,
+              state: 1,
+              index: i
+            }
+          });
+        });
+    });
+};
+
+YT2gether.initChatroom();
+YT2gether.initYoutube();
