@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
 var ghPages = require('gulp-gh-pages');
 var postcss = require('gulp-postcss');
@@ -30,6 +31,9 @@ gulp.task('index', function () {
 
 gulp.task('js', function () {
   return gulp.src('app/app.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(BUILD_PATH));
 });
 
