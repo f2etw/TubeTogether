@@ -21,7 +21,7 @@ if (location.search.length) {
 
   var _deltaTime = new Date(YT2gether.startAt) - new Date();
 
-  var calcRemainingTime = function () {
+  var calcRemainingTime = () => {
     var _timeBase;
 
     _deltaTime = (new Date(YT2gether.startAt) - new Date()) / 1e3;
@@ -29,11 +29,11 @@ if (location.search.length) {
     clearTimeout(YT2gether.refeshTimer);
     countdownTimer.roughTime = null;
 
-    countdownTimer.time = countdownTimer.timeBase.map(function (base, idx) {
+    countdownTimer.time = countdownTimer.timeBase.map((base, idx) => {
       return _deltaTime / base % countdownTimer.timeLimitation[idx] | 0;
     });
 
-    countdownTimer.time.forEach(function (t, i) {
+    countdownTimer.time.forEach((t, i) => {
       if (!countdownTimer.roughTime && t) {
         _timeBase = countdownTimer.timeBase[i];
         countdownTimer.roughTime = t + countdownTimer.timeUnit[i];
@@ -43,11 +43,11 @@ if (location.search.length) {
     document.documentElement.setAttribute('data-countdown', 'Start after ~' + countdownTimer.roughTime);
 
     if (_deltaTime < 60 * 1) {
-      YT2gether.refeshTimer = setTimeout(function () {
+      YT2gether.refeshTimer = setTimeout(() => {
         location.reload();
       }, _deltaTime * 1e3);
     } else {
-      YT2gether.refeshTimer = setTimeout(function () {
+      YT2gether.refeshTimer = setTimeout(() => {
         calcRemainingTime();
       }, _timeBase * 200);
     }
@@ -67,15 +67,15 @@ if (location.search.length) {
   YT2gether.stopInit = true;
 
   // update info from github issue
-  fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then(function (response) {
+  fetch('https://api.github.com/repos/f2etw/TubeTogether/issues?labels=living&state=open').then((response) => {
     return response.json();
   })
-  .then(function (posts) {
+  .then((posts) => {
     if (/^\?/.test(posts[0].body)) {
       location.search = posts[0].body.match(/^\?.+/)[0];
     }
   })
-  .catch(function (content) {
+  .catch((content) => {
     if (window.confirm('GG 惹，請問要去 GitHub issue 確認一下有沒有新活動嗎？')) {
       location.href = 'https://github.com/f2etw/TubeTogether/labels/living';
     }
@@ -92,35 +92,35 @@ var DURATION_UNIT = {
   'S': 1
 };
 
-YT2gether.initChatroom = function () {
+YT2gether.initChatroom = () => {
   if (YT2gether.chatroom === 'none') { return; }
   var chatIframe = document.createElement('iframe');
   chatIframe.src = YT2gether.chatroom;
   document.body.appendChild(chatIframe);
 };
 
-YT2gether.initYoutube = function () {
+YT2gether.initYoutube = () => {
   if (YT2gether.stopInit) { return; }
 
   fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
-    .then(function (res) {
+    .then((res) => {
       return res.json();
     })
-    .then(function (data) {
-      return data.items.map(function (item) {
+    .then((data) => {
+      return data.items.map((item) => {
         return item.contentDetails.videoId;
       }).join();
     })
-    .then(function (listString) {
+    .then((listString) => {
       return fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
-        .then(function (res) {
+        .then((res) => {
           return res.json();
         });
     })
-    .then(function (data) {
-      var durations = data.items.map(function (item) {
-        return item.contentDetails.duration.match(/\d+\w/gi).reduce(function (a, b, c) {
-          var xx = [a, b].map(function (i) {
+    .then((data) => {
+      var durations = data.items.map((item) => {
+        return item.contentDetails.duration.match(/\d+\w/gi).reduce((a, b, c) => {
+          var xx = [a, b].map((i) => {
             var _i = i.match(/(\d+)(\w)/);
             return _i[1] * DURATION_UNIT[_i[2]];
           });
@@ -129,7 +129,7 @@ YT2gether.initYoutube = function () {
       });
 
       var _durationsTempSum = 0;
-      var durationsStack = durations.map(function (time) {
+      var durationsStack = durations.map((time) => {
         _durationsTempSum += time;
         return _durationsTempSum;
       });
