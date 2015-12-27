@@ -6,19 +6,7 @@ window.YT2gether = {
   startAt: null
 };
 
-// get event info
-if (location.search.length) {
-  let _search = location.search.substr(1);
-
-  let _uq = {};
-  _search.split(/&/).forEach((i) => {
-    _uq[i.split(/=/)[0]] = i.split(/=/)[1] || '';
-  });
-
-  YT2gether.startAt = _uq.startAt;
-  YT2gether.listId = _uq.list;
-  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
-
+YT2gether.countdownTimer = () => {
   let _deltaTime = new Date(YT2gether.startAt) - new Date();
   let countdownTimer;
   let calcRemainingTime = () => {
@@ -63,6 +51,22 @@ if (location.search.length) {
 
     calcRemainingTime();
   }
+};
+
+// get event info
+if (location.search.length) {
+  let _search = location.search.substr(1);
+
+  let _uq = {};
+  _search.split(/&/).forEach((i) => {
+    _uq[i.split(/=/)[0]] = i.split(/=/)[1] || '';
+  });
+
+  YT2gether.startAt = _uq.startAt;
+  YT2gether.listId = _uq.list;
+  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
+
+  YT2gether.countdownTimer();
 } else {
   YT2gether.stopInit = true;
 
