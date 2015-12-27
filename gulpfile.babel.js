@@ -16,6 +16,11 @@ let reload = browserSync.reload;
 let APP_PATH = 'app/';
 let BUILD_PATH = '_public/';
 
+function swallowError (error) {
+  console.log(error.toString());
+  this.emit('end');
+}
+
 gulp.task('css', () => {
   let processors = [
     autoprefixer,
@@ -25,6 +30,7 @@ gulp.task('css', () => {
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
+    .on('error', swallowError)
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(BUILD_PATH));
 });
