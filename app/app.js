@@ -32,7 +32,8 @@ YT2gether.countdownTimer = () => {
 
     if (_deltaTime < 60 * 1) {
       YT2gether.refeshTimer = setTimeout(() => {
-        location.reload();
+        document.documentElement.setAttribute('data-countdown', 'Start!');
+        YT2gether.initYoutube();
       }, _deltaTime * 1e3);
     } else {
       YT2gether.refeshTimer = setTimeout(() => {
