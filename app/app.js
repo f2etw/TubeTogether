@@ -120,12 +120,12 @@ YT2gether.initYoutube = () => {
     })
     .then((data) => {
       let durations = data.items.map((item) => {
-        return item.contentDetails.duration.match(/\d+\w/gi).reduce((a, b, c) => {
-          let xx = [a, b].map((i) => {
-            let _i = i.match(/(\d+)(\w)/);
-            return _i[1] * DURATION_UNIT[_i[2]];
-          });
-          return xx[0] + xx[1];
+        return item.contentDetails.duration.match(/\d+\w/gi).map((dura) => {
+          let [, time, unit] = dura.match(/(\d+)(\w)/);
+          return time * DURATION_UNIT[unit];
+        })
+        .reduce((a, b) => {
+          return a + b;
         });
       });
 
