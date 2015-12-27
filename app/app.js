@@ -67,7 +67,12 @@ if (location.search.length) {
   YT2gether.listId = _uq.list;
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 
-  YT2gether.countdownTimer();
+  if (!YT2gether.startAt || !YT2gether.listId) {
+    YT2gether.stopInit = true;
+    location.href = location.origin + location.pathname;
+  } else {
+    YT2gether.countdownTimer();
+  }
 } else {
   YT2gether.stopInit = true;
 
