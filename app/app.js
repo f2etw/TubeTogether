@@ -54,6 +54,64 @@ YT2gether.countdownTimer = () => {
   }
 };
 
+YT2gether.generator = () => {
+  let dialog = {
+    el: {},
+    data: {
+      base: location.origin + location.pathname
+    }
+  };
+
+  let patterns = {
+    YMDTHM: /^\d{4}(-\d{2}){2}T\d{2}:\d{2}/,
+    THMS: /T\d{2}:\d{2}:\d{2}$/
+  };
+
+  dialog.el.form = document.getElementsByClassName('dialog')[0];
+  [dialog.el.time, dialog.el.listid, dialog.el.chatroom] = [].slice.call(dialog.el.form.getElementsByTagName('input'));
+  dialog.el.resultLink = dialog.el.form.querySelector('.result a');
+  [dialog.el.shareBtnFB, dialog.el.shareBtnTwitter] = [].slice.call(dialog.el.form.querySelectorAll('.sharebtn'));
+
+  dialog.data.urlTpl = {
+    fb: dialog.el.shareBtnFB.getAttribute('data-url'),
+    tw: dialog.el.shareBtnTwitter.getAttribute('data-url')
+  };
+
+  dialog.updateLink = () => {
+    if (!dialog.el.form.checkValidity()) {
+      console.log('form checkValidity false!');
+      return;
+    }
+
+    // check time format
+    let _time = dialog.el.time.value;
+    if (patterns.YMDTHM.test(_time)) {
+      dialog.data.time = _time += patterns.THMS.test(_time) ? '+08:00' : ':00+08:00';
+    } else {
+      // alert('false time value');
+    }
+
+    dialog.data.listid = dialog.el.listid.value;
+    dialog.data.chatroom = dialog.el.chatroom.value === '' ? '' : '&chatroom=' + dialog.el.chatroom.value;
+
+    let url = dialog.data.base + `?startAt=${dialog.data.time}&list=${dialog.data.listid}${dialog.data.chatroom}`;
+
+    dialog.el.resultLink.innerHTML = url;
+    dialog.el.resultLink.href = url;
+    dialog.el.shareBtnFB.href = dialog.data.urlTpl.fb.replace('${url}', encodeURI(url));
+    dialog.el.shareBtnTwitter.href = dialog.data.urlTpl.tw.replace('${url}', encodeURIComponent(url)).replace('${text}', dialog.data.time);
+
+  };
+
+  // init now time(GMT+8) format style
+  let now = new Date();
+  dialog.el.time.value = new Date(now - now.getTimezoneOffset() * 6e4).toISOString().split('.')[0];
+
+  dialog.updateLink();
+  dialog.el.form.addEventListener('input', dialog.updateLink);
+  dialog.el.form.style.display = 'block';
+};
+
 // get event info
 if (location.search.length) {
   let _search = location.search.substr(1);
@@ -65,9 +123,19 @@ if (location.search.length) {
 
   YT2gether.startAt = _uq.startAt;
   YT2gether.listId = _uq.list;
+  YT2gether.new = (_uq.new === '');
+
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
 
-  YT2gether.countdownTimer();
+  if (YT2gether.new) {
+    YT2gether.stopInit = true;
+    YT2gether.generator();
+  } else if (!YT2gether.startAt || !YT2gether.listId) {
+    YT2gether.stopInit = true;
+    location.href = location.origin + location.pathname;
+  } else {
+    YT2gether.countdownTimer();
+  }
 } else {
   YT2gether.stopInit = true;
 

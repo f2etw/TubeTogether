@@ -10,5 +10,48 @@
   <div id="player"></div>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script defer src="./app.js"></script>
+
+  <form class="dialog" style="display: none;" action="/">
+    <label title="format: &#10;2015-12-25T01:00:00">
+      Time(+08:00) *
+      <svg class="icon-info">
+        <use xlink:href="icon.svg#icon-info-with-circle"></use>
+      </svg>
+      <input type="datetime-local" step="1" required>
+    </label>
+    <label>
+      List ID *
+      <input type="text" required placeholder="" minlength="12">
+    </label>
+
+    <label title="set: none &#10;if you don't need chatroom">
+      Chatroom URL
+      <svg class="icon-info">
+        <use xlink:href="icon.svg#icon-info-with-circle"></use>
+      </svg>
+      <input type="text" placeholder="[optional]">
+    </label>
+
+    <hr>
+
+    <label class="result">
+      Result:
+      <a href="###"></a>
+    </label>
+
+    <a href="###" class="sharebtn" data-social="Facebook" target="_blank"
+      data-url="https://www.facebook.com/sharer/sharer.php?u=${url}">
+      <svg>
+        <use xlink:href="icon.svg#icon-facebook-square"></use>
+      </svg>
+    </a>
+    <a href="###" class="sharebtn" data-social="Twitter" target="_blank"
+      data-url="https://twitter.com/intent/tweet?hashtags=TubeTogether&amp;url=${url}">
+      <svg>
+        <use xlink:href="icon.svg#icon-twitter-square"></use>
+      </svg>
+    </a>
+  </form>
+
 </body>
 </html>
