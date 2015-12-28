@@ -10,6 +10,7 @@ import csswring from 'csswring';
 import autoprefixer from 'autoprefixer';
 import plumber from 'gulp-plumber';
 import uglify from 'gulp-uglify';
+import svgmin from 'gulp-svgmin';
 
 let reload = browserSync.reload;
 
@@ -20,6 +21,17 @@ function swallowError (error) {
   console.log(error.toString());
   this.emit('end');
 }
+
+gulp.task('image', () => {
+  return gulp.src(`${APP_PATH}*.svg`)
+    .pipe(svgmin({
+      plugins: [
+        {cleanupIDs: false },
+        {sortAttrs: true }
+      ]
+    }))
+    .pipe(gulp.dest(BUILD_PATH));
+});
 
 gulp.task('css', () => {
   let processors = [
@@ -73,7 +85,8 @@ gulp.task('dev', ['serve'], () => {
   gulp.watch([`${APP_PATH}index.html`], ['index', reload]);
 });
 
-gulp.task('build', ['js', 'index', 'css']);
+gulp.task('build', ['js', 'index', 'css', 'image']);
+gulp.task('default', ['build']);
 
 gulp.task('deploy', ['build'], () => {
   return gulp.src(BUILD_PATH + '*/')
