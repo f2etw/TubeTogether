@@ -176,6 +176,15 @@ YT2gether.initChatroom = () => {
 YT2gether.initYoutube = () => {
   if (YT2gether.stopInit) { return; }
 
+  let getYTduration = (timeString) => {
+    return timeString.match(/\d+\w/gi).map((dura) => {
+      let [, time, unit] = dura.match(/(\d+)(\w)/);
+      return time * DURATION_UNIT[unit];
+    })
+    .reduce((a, b) => {
+      return a + b;
+    })
+  };
   fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
     .then((res) => {
       return res.json();
@@ -193,13 +202,7 @@ YT2gether.initYoutube = () => {
     })
     .then((data) => {
       let durations = data.items.map((item) => {
-        return item.contentDetails.duration.match(/\d+\w/gi).map((dura) => {
-          let [, time, unit] = dura.match(/(\d+)(\w)/);
-          return time * DURATION_UNIT[unit];
-        })
-        .reduce((a, b) => {
-          return a + b;
-        });
+        return getYTduration(item.contentDetails.duration);
       });
 
       let _durationsTempSum = 0;
