@@ -123,6 +123,7 @@ if (location.search.length) {
 
   YT2gether.startAt = _uq.startAt;
   YT2gether.listId = _uq.list;
+  YT2gether.vId = _uq.v;
   YT2gether.new = (_uq.new === '');
 
   YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
@@ -130,7 +131,7 @@ if (location.search.length) {
   if (YT2gether.new) {
     YT2gether.stopInit = true;
     YT2gether.generator();
-  } else if (!YT2gether.startAt || !YT2gether.listId) {
+  } else if (!YT2gether.startAt || (!YT2gether.listId && !YT2gether.vId)) {
     YT2gether.stopInit = true;
     location.href = location.origin + location.pathname;
   } else {
@@ -176,67 +177,95 @@ YT2gether.initChatroom = () => {
 YT2gether.initYoutube = () => {
   if (YT2gether.stopInit) { return; }
 
-  fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
-    .then((res) => {
-      return res.json();
+  let getYTduration = (timeString) => {
+    return timeString.match(/\d+\w/gi).map((dura) => {
+      let [, time, unit] = dura.match(/(\d+)(\w)/);
+      return time * DURATION_UNIT[unit];
     })
-    .then((data) => {
-      return data.items.map((item) => {
-        return item.contentDetails.videoId;
-      }).join();
+    .reduce((a, b) => {
+      return a + b;
     })
-    .then((listString) => {
-      return fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
-        .then((res) => {
-          return res.json();
-        });
-    })
-    .then((data) => {
-      let durations = data.items.map((item) => {
-        return item.contentDetails.duration.match(/\d+\w/gi).map((dura) => {
-          let [, time, unit] = dura.match(/(\d+)(\w)/);
-          return time * DURATION_UNIT[unit];
-        })
-        .reduce((a, b) => {
-          return a + b;
-        });
-      });
+  };
 
-      let _durationsTempSum = 0;
-      let durationsStack = durations.map((time) => {
-        _durationsTempSum += time;
-        return _durationsTempSum;
-      });
+  if (YT2gether.vId) {
+    fetch(`https://www.googleapis.com/youtube/v3/videos?id=${YT2gether.vId}&key=AIzaSyDYwPzLevXauI-kTSVXTLroLyHEONuF9Rw&part=contentDetails`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        let _totalDuration = getYTduration(data.items[0].contentDetails.duration);
+        let _deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
-      let totalDuration = durationsStack.slice(-1)[0];
-
-      let timer = {};
-      timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
-
-      // if event was over or not yet begun
-      if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
-        return;
-      }
-
-      let i = durationsStack.length - 1;
-      for (; i >= 0; i--) {
-        if (timer.deltaTime > durationsStack[i]) {
-          timer.startTime = timer.deltaTime - durationsStack[i];
-          break;
+        // if event was over or not yet begun
+        if ((_deltaTime < 0 || _totalDuration < _deltaTime) && _totalDuration) {
+          return;
         }
-      }
 
-      YT2gether.player = new YT.Player('player', {
-        playerVars: {
-          listType: 'playlist',
-          list: YT2gether.listId,
-          autoplay: 1,
-          start: timer.startTime,
-          state: 1,
-          index: i
+        YT2gether.player = new YT.Player('player', {
+          videoId: YT2gether.vId,
+          playerVars: {
+            autoplay: 1,
+            start: _deltaTime
+          }
+        });
+      })
+  } else {
+    fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        return data.items.map((item) => {
+          return item.contentDetails.videoId;
+        }).join();
+      })
+      .then((listString) => {
+        return fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
+          .then((res) => {
+            return res.json();
+          });
+      })
+      .then((data) => {
+        let durations = data.items.map((item) => {
+          return getYTduration(item.contentDetails.duration);
+        });
+
+        let _durationsTempSum = 0;
+        let durationsStack = durations.map((time) => {
+          _durationsTempSum += time;
+          return _durationsTempSum;
+        });
+
+        let totalDuration = durationsStack.slice(-1)[0];
+
+        let timer = {};
+        timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
+
+        // if event was over or not yet begun
+        if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
+          return;
         }
+
+        let i = durationsStack.length - 1;
+        for (; i >= 0; i--) {
+          if (timer.deltaTime > durationsStack[i]) {
+            timer.startTime = timer.deltaTime - durationsStack[i];
+            break;
+          }
+        }
+
+        YT2gether.player = new YT.Player('player', {
+          playerVars: {
+            listType: 'playlist',
+            list: YT2gether.listId,
+            autoplay: 1,
+            start: timer.startTime,
+            state: 1,
+            index: i
+          }
+        });
       });
-    });
+  }
 };
 
 YT2gether.initChatroom();
