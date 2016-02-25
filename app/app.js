@@ -210,61 +210,61 @@ YT2gether.initYoutube = () => {
         });
       })
   } else {
-  fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      return data.items.map((item) => {
-        return item.contentDetails.videoId;
-      }).join();
-    })
-    .then((listString) => {
-      return fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
-        .then((res) => {
-          return res.json();
+    fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        return data.items.map((item) => {
+          return item.contentDetails.videoId;
+        }).join();
+      })
+      .then((listString) => {
+        return fetch(`${YOUTUBE_API_URL}/videos?part=contentDetails&maxResults=50&id=${listString}&key=${API_KEY}`)
+          .then((res) => {
+            return res.json();
+          });
+      })
+      .then((data) => {
+        let durations = data.items.map((item) => {
+          return getYTduration(item.contentDetails.duration);
         });
-    })
-    .then((data) => {
-      let durations = data.items.map((item) => {
-        return getYTduration(item.contentDetails.duration);
-      });
 
-      let _durationsTempSum = 0;
-      let durationsStack = durations.map((time) => {
-        _durationsTempSum += time;
-        return _durationsTempSum;
-      });
+        let _durationsTempSum = 0;
+        let durationsStack = durations.map((time) => {
+          _durationsTempSum += time;
+          return _durationsTempSum;
+        });
 
-      let totalDuration = durationsStack.slice(-1)[0];
+        let totalDuration = durationsStack.slice(-1)[0];
 
-      let timer = {};
-      timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
+        let timer = {};
+        timer.deltaTime = (new Date() - new Date(YT2gether.startAt)) / 1e3 | 0;
 
-      // if event was over or not yet begun
-      if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
-        return;
-      }
-
-      let i = durationsStack.length - 1;
-      for (; i >= 0; i--) {
-        if (timer.deltaTime > durationsStack[i]) {
-          timer.startTime = timer.deltaTime - durationsStack[i];
-          break;
+        // if event was over or not yet begun
+        if (timer.deltaTime < 0 || totalDuration < timer.deltaTime) {
+          return;
         }
-      }
 
-      YT2gether.player = new YT.Player('player', {
-        playerVars: {
-          listType: 'playlist',
-          list: YT2gether.listId,
-          autoplay: 1,
-          start: timer.startTime,
-          state: 1,
-          index: i
+        let i = durationsStack.length - 1;
+        for (; i >= 0; i--) {
+          if (timer.deltaTime > durationsStack[i]) {
+            timer.startTime = timer.deltaTime - durationsStack[i];
+            break;
+          }
         }
+
+        YT2gether.player = new YT.Player('player', {
+          playerVars: {
+            listType: 'playlist',
+            list: YT2gether.listId,
+            autoplay: 1,
+            start: timer.startTime,
+            state: 1,
+            index: i
+          }
+        });
       });
-    });
   }
 };
 
