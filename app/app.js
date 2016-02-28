@@ -100,7 +100,6 @@ YT2gether.generator = () => {
     dialog.el.resultLink.href = url;
     dialog.el.shareBtnFB.href = dialog.data.urlTpl.fb.replace('${url}', encodeURI(url));
     dialog.el.shareBtnTwitter.href = dialog.data.urlTpl.tw.replace('${url}', encodeURIComponent(url)).replace('${text}', dialog.data.time);
-
   };
 
   // init now time(GMT+8) format style
@@ -184,7 +183,7 @@ YT2gether.initYoutube = () => {
     })
     .reduce((a, b) => {
       return a + b;
-    })
+    });
   };
 
   if (YT2gether.vId) {
@@ -208,7 +207,7 @@ YT2gether.initYoutube = () => {
             start: _deltaTime
           }
         });
-      })
+      });
   } else {
     fetch(`${YOUTUBE_API_URL}/playlistItems?part=contentDetails&maxResults=50&playlistId=${YT2gether.listId}&key=${API_KEY}`)
       .then((res) => {
