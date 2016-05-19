@@ -125,7 +125,7 @@ if (location.search.length) {
   YT2gether.vId = _uq.v;
   YT2gether.new = (_uq.new === '');
 
-  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~chat';
+  YT2gether.chatroom = _uq.chatroom || 'https://gitter.im/f2etw/TubeTogether/~embed';
 
   if (YT2gether.new) {
     YT2gether.stopInit = true;
